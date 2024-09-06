@@ -34,25 +34,15 @@ def missing_values_table(df):
     return mis_val_table_ren_columns
 
 
-# def format_float(value):
-#     return f'{value:,.2f}'
-
-
-# def find_agg(df: pd.DataFrame, agg_column: str, agg_metric: str, col_name: str, top: int, order=False) -> pd.DataFrame:
-#     new_df = df.groupby(agg_column)[agg_column].agg(agg_metric).reset_index(name=col_name). \
-#         sort_values(by=col_name, ascending=order)[:top]
-#     return new_df
+# Define a function to convert milliseconds to seconds and drop the original ms columns
+def apply_ms_to_sec_and_drop(columns, df):
+    for col in columns:
+        new_col = col.replace('ms', 'sec')
+        df[new_col] = df[col].apply(ms_to_sec)  # Convert ms to sec
+        df.drop(col, axis=1, inplace=True)  # Drop the original ms column
+    return df
 
 def ms_to_sec(ms):
-    """
-    Convert milliseconds to seconds.
-    
-    Parameters:
-    ms (int or float): Time in milliseconds.
-    
-    Returns:
-    float: Time in seconds.
-    """
     return ms / 1000.0
 
 
@@ -61,6 +51,13 @@ def convert_bytes_to_megabytes(df, bytes_data):
     df[bytes_data] = df[bytes_data] / megabyte
     return df[bytes_data]
 
+# Define a function to convert bytes to megabytes for multiple columns
+def convert_columns_to_mb(columns, df):
+    for col in columns:
+        new_col = col.replace('Bytes', 'MB')
+        df[new_col] = convert_bytes_to_megabytes(df, col)
+        df.drop(col, axis=1, inplace=True)  # Drop the original ms column
+    return df
 
 def fix_outlier(df, column):
     df[column] = np.where(df[column] > df[column].quantile(0.95), df[column].median(), df[column])
