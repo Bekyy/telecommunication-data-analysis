@@ -28,8 +28,11 @@ columns_to_convert = [
     'Gaming DL (Bytes)', 'Total DL (Bytes)', 'TCP DL Retrans. Vol (Bytes)', 'TCP UL Retrans. Vol (Bytes)',
     'Other DL (Bytes)', 'Other UL (Bytes)', 'Email DL (Bytes)', 'Email UL (Bytes)'
 ]
+
 # Apply the function to convert all columns
 convert_columns_to_mb(columns_to_convert, df)
+
+# User Engagement Analysis
 
 def user_behaviour(df):
     applications = ['Social Media', 'Youtube', 'Netflix', 'Google', 'Email', 'Gaming', 'Other']
@@ -55,18 +58,19 @@ def user_behaviour(df):
         return user_behavior
 
 # Option to drop or fill missing values
-st.subheader("Handle Missing Values")
-missing_column = st.selectbox("Choose a column to fill missing values", df.columns[df.isnull().any()])
-fill_method = st.radio("Fill method", ["Fill with Mean", "Fill with Median", "Drop Rows"])
-
-if st.button("Apply Fill"):
-    if fill_method == "Fill with Mean":
-        df[missing_column] = df[missing_column].fillna(df[missing_column].mean())
-    elif fill_method == "Fill with Median":
-        df[missing_column] = df[missing_column].fillna(df[missing_column].median())
-    else:
-        df = df.dropna(subset=[missing_column])
-    st.success(f"{missing_column} cleaned successfully")
+with st.sidebar:
+    st.subheader("Handle Missing Values")
+    missing_column = st.selectbox("Choose a column to fill missing values", df.columns[df.isnull().any()])
+    fill_method = st.radio("Fill method", ["Fill with Mean", "Fill with Median", "Drop Rows"])
+    
+    if st.button("Apply Fill"):
+        if fill_method == "Fill with Mean":
+            df[missing_column] = df[missing_column].fillna(df[missing_column].mean())
+        elif fill_method == "Fill with Median":
+            df[missing_column] = df[missing_column].fillna(df[missing_column].median())
+        else:
+            df = df.dropna(subset=[missing_column])
+        st.success(f"{missing_column} cleaned successfully")
 
 # ---- 2. Descriptive Statistics ----
 st.subheader("Descriptive Statistics")
@@ -91,6 +95,7 @@ with col2:  # Use col2 here for side-by-side display
     st.bar_chart(top_manufacturers)
 
 
+#User Engagement Analysis
 # Define the applications to calculate total data usage (DL + UL)
 st.subheader("TotalData usages by application")
 applications = ['Social Media', 'Youtube', 'Netflix', 'Google', 'Email', 'Gaming', 'Other']

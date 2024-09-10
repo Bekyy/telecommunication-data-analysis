@@ -1,23 +1,36 @@
+# Use an appropriate base image with Python
+# FROM python:3.9
+
+# # Set the working directory inside the Docker container
+# WORKDIR /app
+
+# # Copy the requirements file to the Docker container
+# COPY requirements.txt .
+# RUN pip install --upgrade pip
+# # Install dependencies
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # Copy the entire Django project to the Docker container
+# COPY . .
+
+# EXPOSE 5432
+# Define the command to run the Django app
+# CMD ["streamlit", "run", "src/Home.py"]
+
 # Use an official Python runtime as a parent image
-FROM python:3.10-slim
+FROM python:3.9-slim
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+# Set the working directory
+WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt ./
+# Copy the current directory contents into the container at /app
+COPY . /app
 
-# Install any needed packages specified in requirements.txt
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code into the container
-COPY . .
+# Expose port for MLflow UI
+EXPOSE 5000
 
-# Make port 80 available to the world outside this container (if web app)
-EXPOSE 80
-
-# Define environment variable (optional)
-ENV NAME World
-
-# Run app.py when the container launches (adjust path if necessary)
-CMD ["python", "./src/app.py"]
+# Run MLflow tracking server
+CMD ["mlflow", "run", "scripts/model.py"]

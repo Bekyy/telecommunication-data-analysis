@@ -52,3 +52,22 @@ def load_data_using_sqlalchemy(query):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
+    
+def load_data_to_postgres(df):
+    try:
+        # Define your PostgreSQL connection parameters using SQLAlchemy
+        engine = create_engine(
+            'postgresql+psycopg2://postgres:1234@localhost:5432/xdr_data'
+        )
+        
+        table_name = 'user_satisfaction_scores'
+        
+        # Use SQLAlchemy engine to load data into PostgreSQL
+        df.to_sql(table_name, con=engine, if_exists='replace', index=False)
+        
+        print(f"Data successfully loaded to table {table_name}")
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+    
