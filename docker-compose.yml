@@ -1,0 +1,16 @@
+version: '3'
+services:
+  hom-web:
+    container_name: hom-web
+    restart: always
+    build: .
+    
+
+    ports:
+      - 5432:5432
+  
+    volumes:
+      - .:/app
+ 
+
+

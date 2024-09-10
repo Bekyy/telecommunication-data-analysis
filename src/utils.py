@@ -59,6 +59,22 @@ def convert_columns_to_mb(columns, df):
         df.drop(col, axis=1, inplace=True)  # Drop the original ms column
     return df
 
+def handeling_missing_data(data):
+    missing_data = data.isnull().sum().sort_values(ascending=False)
+    missing_percentage = (missing_data / len(data)) * 100
+    data_cleaned = data.drop(columns=missing_data[missing_percentage > 90].index)
+
+    # Step 3: Impute missing values in numeric columns using the mean
+    numeric_cols = data_cleaned.select_dtypes(include=['float64', 'int64']).columns
+    data_cleaned[numeric_cols] = data_cleaned[numeric_cols].fillna(0)
+
+    # Step 4: Impute missing values in categorical columns using 'unknown'
+    categorical_cols = data_cleaned.select_dtypes(include=['object']).columns
+    data_cleaned[categorical_cols] = data_cleaned[categorical_cols].fillna('unknown')
+    return data_cleaned
+
+
+
 def fix_outlier(df, column):
     df[column] = np.where(df[column] > df[column].quantile(0.95), df[column].median(), df[column])
     return df[column]

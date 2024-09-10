@@ -52,3 +52,26 @@ def load_data_using_sqlalchemy(query):
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
+    
+def load_data_to_postgres(df):
+    try:
+        # Define your PostgreSQL connection parameters
+        connection = psycopg2.connect(
+            host="localhost",  # Replace with your host
+            port=5432,  # Ensure this is an integer, not a string
+            database="xdr_data",  # Replace with your database name
+            user="postgres",  # Replace with your PostgreSQL username
+            password="1234"  # Replace with your password
+        )
+        
+        table_name = 'user_satisfaction_scores'
+        df.to_sql(table_name, con=connection, if_exists='replace', index=False)
+        
+        # Close the 
+        connection.close()
+     
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+    
+    

@@ -40,11 +40,12 @@
 * Exploratory Data Analysis (EDA): to understand the dataset and identify the missing values & outliers if any using visual and quantitative methods to get a sense of the story it tells. 
 * User Overview Analysis: to track user behavior through the following applications:  Social Media, Google, Email, YouTube, Netflix, Gaming, and others.
 * User Engagement Analysis: to track the user’s engagement using the following engagement metrics: 
-- sessions frequency 
-- the duration of the session 
-- the session total traffic (download and upload (bytes))
+   > - sessions frequency 
+   > - the duration of the session 
+   > - the session total traffic (download and upload (bytes))
 * Experience Analytics: Tracking & evaluating customers’ experience 
 * Satisfaction Analysis: satisfaction of a user is depending on user engagement and experience
+* Dashboards
 
 **Prerequisites**
 * Python 3.x: Ensure Python is installed on your system.

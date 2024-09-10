@@ -55,18 +55,19 @@ def user_behaviour(df):
         return user_behavior
 
 # Option to drop or fill missing values
-st.subheader("Handle Missing Values")
-missing_column = st.selectbox("Choose a column to fill missing values", df.columns[df.isnull().any()])
-fill_method = st.radio("Fill method", ["Fill with Mean", "Fill with Median", "Drop Rows"])
-
-if st.button("Apply Fill"):
-    if fill_method == "Fill with Mean":
-        df[missing_column] = df[missing_column].fillna(df[missing_column].mean())
-    elif fill_method == "Fill with Median":
-        df[missing_column] = df[missing_column].fillna(df[missing_column].median())
-    else:
-        df = df.dropna(subset=[missing_column])
-    st.success(f"{missing_column} cleaned successfully")
+with st.sidebar:
+    st.subheader("Handle Missing Values")
+    missing_column = st.selectbox("Choose a column to fill missing values", df.columns[df.isnull().any()])
+    fill_method = st.radio("Fill method", ["Fill with Mean", "Fill with Median", "Drop Rows"])
+    
+    if st.button("Apply Fill"):
+        if fill_method == "Fill with Mean":
+            df[missing_column] = df[missing_column].fillna(df[missing_column].mean())
+        elif fill_method == "Fill with Median":
+            df[missing_column] = df[missing_column].fillna(df[missing_column].median())
+        else:
+            df = df.dropna(subset=[missing_column])
+        st.success(f"{missing_column} cleaned successfully")
 
 # ---- 2. Descriptive Statistics ----
 st.subheader("Descriptive Statistics")
