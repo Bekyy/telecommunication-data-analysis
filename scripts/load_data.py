@@ -55,23 +55,19 @@ def load_data_using_sqlalchemy(query):
     
 def load_data_to_postgres(df):
     try:
-        # Define your PostgreSQL connection parameters
-        connection = psycopg2.connect(
-            host="localhost",  # Replace with your host
-            port=5432,  # Ensure this is an integer, not a string
-            database="xdr_data",  # Replace with your database name
-            user="postgres",  # Replace with your PostgreSQL username
-            password="1234"  # Replace with your password
+        # Define your PostgreSQL connection parameters using SQLAlchemy
+        engine = create_engine(
+            'postgresql+psycopg2://postgres:1234@localhost:5432/xdr_data'
         )
         
         table_name = 'user_satisfaction_scores'
-        df.to_sql(table_name, con=connection, if_exists='replace', index=False)
         
-        # Close the 
-        connection.close()
-     
+        # Use SQLAlchemy engine to load data into PostgreSQL
+        df.to_sql(table_name, con=engine, if_exists='replace', index=False)
+        
+        print(f"Data successfully loaded to table {table_name}")
+        
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
-    
     
