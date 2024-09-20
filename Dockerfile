@@ -1,36 +1,23 @@
 # Use an appropriate base image with Python
-# FROM python:3.9
+FROM python:3.9
 
-# # Set the working directory inside the Docker container
-# WORKDIR /app
-
-# # Copy the requirements file to the Docker container
-# COPY requirements.txt .
-# RUN pip install --upgrade pip
-# # Install dependencies
-# RUN pip install --no-cache-dir -r requirements.txt
-
-# # Copy the entire Django project to the Docker container
-# COPY . .
-
-# EXPOSE 5432
-# Define the command to run the Django app
-# CMD ["streamlit", "run", "src/Home.py"]
-
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
-
-# Set the working directory
+# Set the working directory inside the Docker container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the requirements file to the Docker container
+COPY requirements.txt .
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Upgrade pip to the latest version
+RUN pip install --upgrade pip
 
-# Expose port for MLflow UI
-EXPOSE 5000
+# Install dependencies from the requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --timeout 120 --retries 5
 
-# Run MLflow tracking server
-CMD ["mlflow", "run", "scripts/model.py"]
+# Copy the entire project to the Docker container
+COPY . .
+
+# Expose the port that Streamlit will run on (default: 8501)
+EXPOSE 8501
+
+# Define the command to run the Streamlit app
+CMD ["streamlit", "run", "src/Home.py", "--server.port=8501", "--server.address=0.0.0.0"]

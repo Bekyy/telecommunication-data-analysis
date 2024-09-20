@@ -1,16 +1,43 @@
-version: '3'
 services:
-  hom-web:
-    container_name: hom-web
-    restart: always
-    build: .
-    
+  web:
+  build: .
+  container_name: python-app
+  environment:
+    POSTGRES_HOST: db
+    POSTGRES_DB: xdr_data
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: 1234
+  depends_on:
+    - db
+  entrypoint: ["./wait-for-it.sh", "db:5432", "--", "streamlit", "run", "src/Home.py"]
+  ports:
+    - "8501:8501"
+  networks:
+    - app-network
 
-    ports:
-      - 5432:5432
-  
+
+  db:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: xdr_data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
     volumes:
-      - .:/app
- 
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  # Expose PostgreSQL port
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      retries: 5
 
+networks:
+  app-network:  # Define the app-network here
+    driver: bridge
 
+volumes:
+  postgres-data:
+    driver: local
